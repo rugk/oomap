@@ -2,15 +2,26 @@
 <html lang="en">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">	
-		<title>OpenOrienteeringMap: The easy Street-O map creation tool</title>
-		<script type='text/javascript' src='http://lib.oomap.co.uk/proj4js/proj4js-compressed.js'></script>
-		<script type='text/javascript' src='http://lib.oomap.co.uk/proj4js/defs/EPSG27700.js'></script>
-		<script type='text/javascript' src='http://lib.oomap.co.uk/openlayers/OpenLayers-2.13.1/OpenLayers.js'></script>
+		<meta name="viewport" content="minimal-ui, initial-scale=0.5, user-scalable=no, width=device-width">
+
+		<meta property="og:title" content="OOMap Blueprint: The easy colour-a-map creation tool!" />
+		<meta property="og:type" content="article" />
+		<meta property="og:url" content="http://oomap.co.uk/" />
+		<meta property="og:description" content="Create colouring-in maps of anywhere in the world with just a few clicks. Print high-quality vector PDFs." />
+		<meta property="og:image" content="http://oomap.co.uk/images/blueprint_screenshot.png" />
+		<meta property="og:site_name" content="OOMap Blueprint: The easy colour-a-map creation tool!" />    
+		<meta property="fb:admins" content="507348039" />    
+		<meta property="fb:app_id" content="1592343544404355" />    
+
+		<title>OOMap Blueprint: The easy colour-a-map creation tool!</title>
+		<script type='text/javascript' src='http://lib.oomap.co.uk/proj4.js'></script>
+		<script type='text/javascript' src='http://lib.oomap.co.uk/openlayers/v3.18.2-dist/ol-debug.js'></script>
 		<script type='text/javascript' src='http://lib.oomap.co.uk/jquery-1.11.3.js'></script>
 		<script type='text/javascript' src='http://lib.oomap.co.uk/jquery-ui-1.11.4.custom/jquery-ui.js'></script>
 		<script type='text/javascript' src='http://lib.oomap.co.uk/jquery.knob.js'></script>
 		<script type='text/javascript' src='http://lib.oomap.co.uk/jquery.jqprint-0.3.js'></script>
 		<script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
+		<script src="//platform.twitter.com/widgets.js"></script>			
 		<script type="text/javascript">
 		  var _gaq = _gaq || [];
 		  _gaq.push(['_setAccount', 'UA-424605-5']);
@@ -23,40 +34,60 @@
 		  })();
 		</script>
 		<script type='text/javascript'>
-			var country = "global";
+			var country = "blueprint";
 		</script>
-		<script type='text/javascript' src='main.js'></script>
+		<script type='text/javascript' src="/main.js?t=<?php echo time(); ?>"></script>
+		<link rel="canonical" href="http://oomap.co.uk/">
 		<link rel='stylesheet' type='text/css' href='http://lib.oomap.co.uk/jquery-ui-1.11.4.custom/jquery-ui.css'>
-		<link rel='stylesheet' type='text/css' href='style.css'>
+		<link rel='stylesheet' type='text/css' href='http://lib.oomap.co.uk/openlayers/v3.18.2-dist/ol.css'>
+		<link rel='stylesheet' type='text/css' href='/style.css'>
 	</head>
 	<body>
+		<script>
+		  window.fbAsyncInit = function() {
+			FB.init({
+			  appId      : '1592343544404355',
+			  xfbml      : true,
+			  version    : 'v2.8'
+			});
+		  };
+
+		  (function(d, s, id){
+			 var js, fjs = d.getElementsByTagName(s)[0];
+			 if (d.getElementById(id)) {return;}
+			 js = d.createElement(s); js.id = id;
+			 js.src = "//connect.facebook.net/en_US/sdk.js";
+			 fjs.parentNode.insertBefore(js, fjs);
+		   }(document, 'script', 'facebook-jssdk'));
+		</script>
 		<div id='toppanel'>
-				<form id='load'>Load saved map #: <input type='text' size='15' id='savedMapID' />
+				<form id='load'>Map ID: <input type='text' size='15' id='savedMapID' />
 					<button id='loadButton' type="submit">Load</button>
 				</form>
-				<div id='title'>OPENORIENTEERINGMAP<span id='titlestatus'>v2.4</span></div>
-				<div id='editions'>
-					<div id='global' class='currentedition'><a href="global.php">&nbsp;  Global  &nbsp;</a></div>
-			                <div id='uk'><a href="uk.php">&nbsp;  UK  &nbsp;</a></div>
-                                        <div id='ireland'><a href="ioa.php">&nbsp;  Ireland  &nbsp;</a></div>
-					<div id='wishlist'>Was this useful for your event? Want to say thanks? Here's a link to <a href="http://www.amazon.co.uk/registry/wishlist/2WLZDJ7S00ERD">my Amazon wish list</a>.</div>
-				</div>
+				<div id='title'>OOMAP Blueprint<span id='titlestatus'>v3.0</span></div>
 		</div>
+		<div id='editions'>
+			<div id='messagePanelHolder'>
+				<div class='messagePanel' id='messageZoom'>Tip: zoom in to see the Blueprint map.</div>
+				<div class='messagePanel' id='messageCentre'>Tip: click where you want the centre of your sheet to be. Click and then drag the blue dot to move the sheet.</div>
+				<div class='messagePanel' id='messageAdd'>Tip: Happy with your map? Click "Save & get PDF map".</div>
+			</div>
+			<table><tr><td>
+			<div id='blueprint' class='editionbutton currentedition'><a href="/blueprint/">&nbsp;  Blueprint  &nbsp;</a></div></td><td>
+			<div id='global' class='editionbutton'><a href="/global/">&nbsp;  Global  &nbsp;</a></div></td><td>
+			<div id='uk' class='editionbutton'><a href="/gb/">&nbsp;  UK  &nbsp;</a></div></td><td>
+			<div id='ireland' class='editionbutton'><a href="/ie/">&nbsp;  Ireland  &nbsp;</a></div></td><td>
+			<div id='wishlist'>Want to say thanks? Here's a link<br />to <a href="http://www.amazon.co.uk/registry/wishlist/2WLZDJ7S00ERD">my Amazon wish list</a>.</div></td><td>
+			<div class="fb-like" data-href="http://oomap.co.uk/blueprint/" data-send="false"  data-layout="button_count" data-width="150" data-show-faces="false" data-share="true" data-font="arial"></div></td><td>
+			<div id='social'><a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="oobr">Tweet</a></div></td>
+			</tr></table>
+		</div>
+
 		<div id='optionspanel'>
 			<div id='toolbar' class="ui-widget-header ui-corner-all">
 				<table>
 					<tr style='height: 27px'>
 						<td rowspan='3' style='vertical-align: top;'>
-							<div id="mapstyle" class="buttonset">
-								<input type="radio" id="streeto_global" name="mapstyle" checked="checked" />
-									<label for="streeto_global"><img src='images/oom_s.png' alt='Street-O' style='width: 60px; height: 60px;' /><br />StreetO</label>
-								<input type="radio" id="streeto_norail_global" name="mapstyle" />
-									<label for="streeto_norail_global"><img src='images/oom_snr.png' alt='Street-O xrail' style='width: 60px; height: 60px;' /><br />StreetO xrail</label>
-								<input type="radio" id="oterrain_global" name="mapstyle" />
-									<label for="oterrain_global"><img src='images/oom_p.png' alt='PseudO' style='width: 60px; height: 60px;' /><br />PseudO</label>
-								<input type="radio" id="urban_skeleton" name="mapstyle" />
-									<label for="urban_skeleton"><img src='images/oom_urban_skeleton.png' alt='Urban Skeleton' style='width: 60px; height: 60px;' /><br />Urban Skeleton</label>
-							</div>
 						</td>
 						<td colspan='3'> 
 							<div id="mapscale">Scale 1:
@@ -89,9 +120,7 @@
 					<tr style='height: 26px'>
 						<td colspan='3'>	
 							<div id="specialoptions">Special 
-								<button id='deletesheet'>Delete Map</button>
-								<button id='deleteXs'>Delete Xs</button>
-								<button id='getOpenplaques'>Add Plaques</button>
+								<button id='deletesheet'>Delete Sheet</button>
 							</div>
 						</td>					
 					</tr>
@@ -99,23 +128,15 @@
 	
 			</div>	
 			<div id='create' class="ui-widget-header ui-corner-all">
-				<button id='createmap'>Save & get PDF map</button><br />					
-				<button id='createclue'>Show clue sheet</button>						
+				<button id='createmap'>Save & get PDF map</button>					
 			</div>	
-			<div id='messagePanelHolder'>
-				<div class='messagePanel' id='messageZoom'>Tip: zoom in to see the orienteering map, before setting options or adding controls.</div>
-				<div class='messagePanel' id='messageCentre'>Tip: click where you want the centre of your sheet to be. Don't forget you can drag the map to move it.</div>
-				<div class='messagePanel' id='messageAdd'>Tip: click to add controls, or drag the blue marker to move the map. Once done, click "Save & get PDF map".</div>
-			</div>
 		</div>
 		<div id='mainpanel'>
 			<div id='controlpanel'>
 				<table id='controldescriptions'>
 					<tr id='spacerrow'><th style='width: 40px;'></th><th style='width: 30px;'></th><th></th><th></th><th style='width:64px;'></th></tr>
 					<tr><th colspan='4' id='maptitle'></th><th><span class="edit" id="edittitle">Edit</span></th></tr>
-					<tr><th colspan='3' id='scalecaption'></th><th colspan='2'>10m&nbsp;contours</th></tr>
-					<tr><td colspan='4' id='racedescription'></td><th><span class="edit" id="editinstructions">Edit</span></th></tr>
-					<tr><th colspan='3' id='controlcaption'>0 controls</th><th colspan='2' id='pointscaption'>0 points</th></tr>
+					<tr><th colspan='3' id='scalecaption'></th><th colspan='2'></th></tr>
 				</table>
 			</div>
 			<!--
@@ -148,55 +169,6 @@
 			</div>
 			<div id='map'></div>
 		</div>
-		<div id="newcontroloptions" title="Control options" style='display: none;'>
-		  <p class="validateTips">Tip: There can only be one start/finish control. Adding another moves it.</p>
-		  <fieldset>
-			<table style='margin: 0 auto;'>
-			<tr>
-				<td id="c_type" class="buttonset">
-					<input type="radio" id="c_regular" name="c_type" checked="checked" /><label for="c_regular"><img src='images/c_regular.png' alt='Regular' style='width: 60px; height: 60px;' /><br />Control</label>
-					<input type="radio" id="c_startfinish" name="c_type" /><label for="c_startfinish"><img src='images/c_startfinish.png' alt='Start and Finish' style='width: 60px; height: 60px;' /><br />Start/Finish</label>
-					<input type="radio" id="c_cross" name="c_type" /><label for="c_cross"><img src='images/c_cross.png' alt='Cross' style='width: 60px; height: 60px;' /><br />Red X</label>
-				</td>
-				<td style='text-align: center; padding: 0 30px;'>
-					<input type="text" id="c_angle" class="knob" value="45"><br /><label for="c_angle">Label angle</label>
-				</td>
-			</tr>
-			</table>
-			<table style='margin: 0 auto;'>
-			<tr>
-				<td>	
-					<label for="c_number">Number</label>
-				</td>
-				<td>
-					<input type="text" name="c_number" id="c_number" size='3' maxlength='3' class="text ui-widget-content ui-corner-all" />
-				</td>
-				<td id="c_score" class="buttonset" colspan="2">
-						Score
-						<input type="radio" id="c_score10" value="10" name="c_score" checked="checked" /><label for="c_score10">10</label>
-						<input type="radio" id="c_score20" value="20" name="c_score" /><label for="c_score20">20</label>
-						<input type="radio" id="c_score30" value="30" name="c_score" /><label for="c_score30">30</label>
-						<input type="radio" id="c_score40" value="40" name="c_score" /><label for="c_score40">40</label>
-						<input type="radio" id="c_score50" value="50" name="c_score" /><label for="c_score50">50</label>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label for="c_description">Description</label>
-				</td>
-				<td colspan="3">  	
-					<input type="text" size='45' maxlength='255' value="" name="c_description" id="c_description" class="text ui-widget-content ui-corner-all" />			
-				</td>
-			</tr>
-			</table>
-		  </fieldset>
-		</div>
-		<div id="newcontroloutsidemap" title="Control outside map" style='display: none;'>
-			<p>
-				<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 50px 0;"></span>
-				New controls must be placed within the map area of the current sheet.
-			</p>
-		</div>
 		<div id="setmaptitle" title="Map title" style='display: none;'>
 		  <p class="validateTips"></p>
 		  <fieldset>
@@ -207,21 +179,6 @@
 				</td>
 				<td>  	
 					<input type="text" size='30' maxlength='50' value="" name="maptitle" id="s_maptitle" class="text ui-widget-content ui-corner-all" />			
-				</td>
-			</tr>
-			</table>
-		  </fieldset>
-		</div>
-		<div id="setracedescription" title="Race instructions" style='display: none;'>
-		  <p class="validateTips"></p>
-		  <fieldset>
-			<table>
-			<tr>
-				<td>
-					<label for="s_racedescription">Instructions</label>
-				</td>
-				<td>  	
-					<input type="text" size='70' maxlength='255' value="" name="racedescription" id="s_racedescription" class="text ui-widget-content ui-corner-all" />			
 				</td>
 			</tr>
 			</table>
@@ -254,30 +211,6 @@
 			<table>
 				<tr><td class="ui-icon ui-icon-alert" style="margin: 0 7px 20px 0;"></td><td style='padding-bottom: 20px; vertical-align: top'>Unfortunately your map and descriptions could not be loaded. An error occurred.</td></tr>
 				<tr><td class="ui-icon ui-icon-info" style="margin: 0 7px 20px 0;"></td><td style='padding-bottom: 20px; vertical-align: top' id='loaderror_text'></td></tr>
-			</table>
-		</div>
-		<div id="openplaques_searching" title="Searching" style='display: none;'>
-			<table>
-				<tr><td class="ui-icon ui-icon-info" style='margin: 0 7px 20px 0;'></td><td style='padding-bottom: 20px; vertical-align: top'>Retrieving local plaques from Open Plaques project at openplaques.org...</td></tr>
-			</table>
-		</div>
-		<div id="openplaques_error" title="Plaques Error" style='display: none;'>
-			<table>
-				<tr><td class="ui-icon ui-icon-alert" style="margin: 0 7px 20px 0;"></td><td style='padding-bottom: 20px; vertical-align: top'>Unfortunately local plaques could not be retrieved. An error occurred.</td></tr>
-				<tr><td class="ui-icon ui-icon-info" style="margin: 0 7px 20px 0;"></td><td style='padding-bottom: 20px; vertical-align: top' id='openplaques_error_text'></td></tr>
-			</table>
-		</div>
-		<div id="cluesheet" title="Clue Sheet" style='display: none;'>
-			<table id='cs_fillinbox'>
-				<tr><td colspan='2'>Name</td><td>Club</td></tr>
-				<tr><td>Start</td><td>Finish</td><td>Time</td></tr>
-				<tr><td>Score</td><td>Penalty</td><td>Total</td></tr>
-			</table>
-			<div id='cs_title'></div>
-			<div id='cs_raceinstructions'></div>
-			<br style='clear: both;' />
-			<table id='cs_controls'>
-				<tr><th></th></tr>
 			</table>
 		</div>
 	</body>
